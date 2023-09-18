@@ -28,7 +28,7 @@ class ApiAlbumAdapter extends AbstractGetAlbum {
 
   @override
   Future<Album> getByID(String id) async {
-    final uri = Uri.parse('https://jsonplaceholder.typicode.com/photos$id');
+    final uri = Uri.parse('https://jsonplaceholder.typicode.com/photos/$id');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       return _album.mapJson(jsonDecode(response.body));
