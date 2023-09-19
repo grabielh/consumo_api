@@ -2,13 +2,12 @@ import 'package:clear_architec/clear_architec/album/dominio/models/album/album.d
 import 'package:flutter/material.dart';
 
 class ListarAlbumProvider extends ChangeNotifier {
-  final List<Album> albums = [];
+  List<Album> albumList = [];
 
-  List<Album> get albumList => albums;
+  get listar => albumList;
 
-  void agregarAlbum(Album nuevoAlbum) {
-    albums.add(nuevoAlbum);
+  void agregarAlbum(Album album) {
+    albumList.add(album);
     notifyListeners();
   }
-
 }

@@ -34,11 +34,11 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
           ],
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Card(
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(5),
+                child: Card(
                   color: const Color(0xFFf5fff5),
                   child: FutureBuilder<Album>(
                     future: _configureAlbum.album.getByID(_idAlbum.text),
@@ -46,10 +46,11 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasError) {
-                        return const Text(
-                            'Error al obtener Albun Ingrese ID !');
+                        return const Center(
+                          child: Text('Error al obtener Álbum. Ingrese ID !'),
+                        );
                       } else if (!snapshot.hasData || snapshot.data == null) {
-                        return const Text('No exiten Albunes');
+                        return const Text('No existen Álbumes');
                       } else {
                         Album? listAlbum = snapshot.data;
                         return Column(
@@ -61,17 +62,17 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                                 leading: Image.network(
                                   listAlbum.url,
                                 ),
-                                
                               ),
                             ),
                             IconButton(
                               onPressed: () async {
                                 Album nuevoAlbum = Album(
-                                    albumId: listAlbum.albumId,
-                                    id: listAlbum.id,
-                                    title: listAlbum.title,
-                                    url: listAlbum.url,
-                                    thumbnailUrl: listAlbum.url);
+                                  albumId: listAlbum.albumId,
+                                  id: listAlbum.id,
+                                  title: listAlbum.title,
+                                  url: listAlbum.url,
+                                  thumbnailUrl: listAlbum.thumbnailUrl,
+                                );
                                 setlisAlbum.agregarAlbum(nuevoAlbum);
                               },
                               icon: const Icon(Icons.save_alt),
@@ -82,8 +83,28 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                     },
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: setlisAlbum.albumList.length,
+                itemBuilder: (context, index) {
+                  Album? albumLit = setlisAlbum.albumList[index];
+                  print(setlisAlbum.albumList.length);
+                  return Card(
+                    child: ListTile(
+                      title: Text(albumLit.title),
+                      subtitle: Text(albumLit.thumbnailUrl),
+                      leading: Image.network(
+                        albumLit.url,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ));
   }
