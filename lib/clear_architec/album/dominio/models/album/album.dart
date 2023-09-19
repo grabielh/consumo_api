@@ -1,4 +1,4 @@
-class Album{
+class Album {
   Album({
     required this.albumId,
     required this.id,
@@ -7,8 +7,8 @@ class Album{
     required this.thumbnailUrl,
   });
   int albumId;
-    int id;
-    String title;
-    String url;
-    String thumbnailUrl;
+  int id;
+  String title;
+  String url;
+  String thumbnailUrl;
 }
