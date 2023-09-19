@@ -1,6 +1,8 @@
 import 'package:clear_architec/clear_architec/album/config/config_album.dart';
 import 'package:clear_architec/clear_architec/album/dominio/models/album/album.dart';
+import 'package:clear_architec/clear_architec/privider/bigdata/bigdata.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ServicesAlbum extends StatefulWidget {
   const ServicesAlbum({super.key});
@@ -12,14 +14,10 @@ class ServicesAlbum extends StatefulWidget {
 class _ServicesAlbumState extends State<ServicesAlbum> {
   final ConfigureAlbum _configureAlbum = ConfigureAlbum();
   final TextEditingController _idAlbum = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-    _idAlbum.text = '15';
-  }
 
   @override
   Widget build(BuildContext context) {
+    final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
     return Scaffold(
         appBar: AppBar(
           title: TextField(
@@ -30,9 +28,7 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
           actions: [
             IconButton(
                 onPressed: () {
-                  setState(() async {
-                    FocusScope.of(context).unfocus();
-                  });
+                  FocusScope.of(context).unfocus();
                 },
                 icon: const Icon(Icons.search))
           ],
@@ -55,47 +51,37 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                       } else if (!snapshot.hasData || snapshot.data == null) {
                         return const Text('No exiten Albunes');
                       } else {
-                        Album? album = snapshot.data;
+                        Album? listAlbum = snapshot.data;
                         return Column(
                           children: [
                             Card(
                               child: ListTile(
-                                title: Text(album!
-                                    .title), // Asegúrate de manejar el caso en que "album" sea nulo
-                                subtitle: Text(album.thumbnailUrl),
-                                leading: Image.network(album.url),
+                                title: Text(listAlbum!.title),
+                                subtitle: Text(listAlbum.thumbnailUrl),
+                                leading: Image.network(
+                                  listAlbum.url,
+                                ),
+                                
                               ),
                             ),
                             IconButton(
-                                onPressed: () {}, icon: const Icon(Icons.save_alt))
+                              onPressed: () async {
+                                Album nuevoAlbum = Album(
+                                    albumId: listAlbum.albumId,
+                                    id: listAlbum.id,
+                                    title: listAlbum.title,
+                                    url: listAlbum.url,
+                                    thumbnailUrl: listAlbum.url);
+                                setlisAlbum.agregarAlbum(nuevoAlbum);
+                              },
+                              icon: const Icon(Icons.save_alt),
+                            ),
                           ],
                         );
                       }
                     },
                   ),
                 ),
-                const SizedBox(height: 50),
-                FutureBuilder<Album>(
-                  future: _configureAlbum.album.getByID(_idAlbum.text),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return const Text('Error al obtener Albun Ingrese ID !');
-                    } else if (!snapshot.hasData || snapshot.data == null) {
-                      return const Text('No exiten Albunes');
-                    } else {
-                      Album? album = snapshot.data;
-                      return Card(
-                        child: ListTile(
-                          title: Text(album!.title),
-                          subtitle: Text(album.thumbnailUrl),
-                          leading: Image.network(album.url),
-                        ),
-                      );
-                    }
-                  },
-                )
               ],
             ),
           ),
