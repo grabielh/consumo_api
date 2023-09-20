@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:clear_architec/clear_architec/album/config/config_album.dart';
 import 'package:clear_architec/clear_architec/album/dominio/models/album/album.dart';
 import 'package:clear_architec/clear_architec/privider/bigdata/bigdata.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ServicesAlbum extends StatefulWidget {
   const ServicesAlbum({super.key});
@@ -14,12 +17,47 @@ class ServicesAlbum extends StatefulWidget {
 class _ServicesAlbumState extends State<ServicesAlbum> {
   final ConfigureAlbum _configureAlbum = ConfigureAlbum();
   final TextEditingController _idAlbum = TextEditingController();
+  /* @override
+  void initState() {
+    super.initState();
+    final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
+    setlisAlbum.cargarListaDesdeSharedPreferences();
+  } */
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
-    setlisAlbum.cargarListaDesdeSharedPreferences(); // Mueve esta llamada aquí
+    cargarListaDesdeSharedPreferences();
+  }
+
+  Future<void> cargarListaDesdeSharedPreferences() async {
+    try {
+      final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
+      final preferencias = await SharedPreferences.getInstance();
+      final listaSerializada = preferencias.getStringList('listaNueva');
+
+      if (listaSerializada != null) {
+        final listaDeserializada = listaSerializada.map((str) {
+          final mapa = json.decode(str);
+          return Album(
+            albumId: mapa['albumId'],
+            id: mapa['id'],
+            title: mapa['title'],
+            url: mapa['url'],
+            thumbnailUrl: mapa['thumbnailUrl'],
+          );
+        }).toList();
+
+        setState(() {
+          setlisAlbum.albumList.clear();
+          setlisAlbum.albumList.addAll(listaDeserializada);
+        });
+      } else {
+        print('No se encontraron datos guardados en SharedPreferences.');
+      }
+    } catch (e) {
+      print('Error al leer la lista desde SharedPreferences: $e');
+    }
   }
 
   @override
