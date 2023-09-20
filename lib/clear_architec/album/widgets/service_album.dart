@@ -15,14 +15,8 @@ class ServicesAlbum extends StatefulWidget {
 }
 
 class _ServicesAlbumState extends State<ServicesAlbum> {
-  final ConfigureAlbum _configureAlbum = ConfigureAlbum();
+  final AlbumConfiguration _configureAlbum = AlbumConfiguration();
   final TextEditingController _idAlbum = TextEditingController();
-  /* @override
-  void initState() {
-    super.initState();
-    final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
-    setlisAlbum.cargarListaDesdeSharedPreferences();
-  } */
 
   @override
   void didChangeDependencies() {
@@ -86,7 +80,7 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                 child: Card(
                   color: const Color(0xFFf5fff5),
                   child: FutureBuilder<Album>(
-                    future: _configureAlbum.album.getByID(_idAlbum.text),
+                    future: _configureAlbum.albumService.getByID(_idAlbum.text),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
@@ -141,7 +135,6 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                 itemCount: setlisAlbum.albumList.length,
                 itemBuilder: (context, index) {
                   Album? albumLit = setlisAlbum.albumList[index];
-                  print(setlisAlbum.albumList.length);
                   return Card(
                     child: ListTile(
                       title: Text(albumLit.title),

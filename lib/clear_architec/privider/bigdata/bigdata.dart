@@ -3,6 +3,7 @@ import 'package:clear_architec/clear_architec/album/dominio/models/album/album.d
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Proveedor que maneja la lista de álbumes y su persistencia en SharedPreferences.
 class ListarAlbumProvider extends ChangeNotifier {
   List<Album> albumList = [];
 
@@ -13,6 +14,7 @@ class ListarAlbumProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Guarda una nueva lista de álbumes en SharedPreferences.
   void guardarListanueva(List<Album> listaNueva) async {
     try {
       final preferencias = await SharedPreferences.getInstance();
@@ -35,6 +37,7 @@ class ListarAlbumProvider extends ChangeNotifier {
     }
   }
 
+  /// Muestra la lista almacenada en SharedPreferences.
   void mostrarLista() async {
     try {
       final preferencias = await SharedPreferences.getInstance();

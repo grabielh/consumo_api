@@ -5,10 +5,13 @@ import 'package:clear_architec/clear_architec/album/dominio/models/album/album.d
 import 'package:clear_architec/clear_architec/album/infraestructura/helpers/album/map_album.dart';
 import 'package:http/http.dart' as http;
 
-class ApiAlbumAdapter extends AbstractGetAlbum {
+/// Clase que adapta la API para acceder a información de álbumes.
+
+///   /// Obtiene todos los álbumes disponibles desde la API.
+class ApiAlbumAdapter extends AlbumRepository {
   final MapAlbum _album = MapAlbum();
   @override
-  Future<List<Album>> getAll() async {
+  Future<List<Album>> fetchAll() async {
     final uri = Uri.parse('https://jsonplaceholder.typicode.com/photos');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -26,8 +29,11 @@ class ApiAlbumAdapter extends AbstractGetAlbum {
     throw UnimplementedError('Error no hay respuesta del servidor !');
   }
 
+  /// Obtiene un álbum por su ID desde la API.
+
+  ///   - [id]: El ID del álbum que se va a buscar.
   @override
-  Future<Album> getByID(String id) async {
+  Future<Album> fetchByID(String id) async {
     final uri = Uri.parse('https://jsonplaceholder.typicode.com/photos/$id');
     final response = await http.get(uri);
     if (response.statusCode == 200) {

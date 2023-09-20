@@ -1,3 +1,4 @@
+/// Clase que representa un álbum.
 class Album {
   Album({
     required this.albumId,

@@ -1,7 +1,9 @@
 import 'package:clear_architec/clear_architec/album/dominio/models/album/album.dart';
 import 'package:clear_architec/clear_architec/album/infraestructura/helpers/common/abstract_base_album.dart';
 
-class MapAlbum implements BaseAlbumMap<Album> {
+/// Clase que mapea datos JSON a objetos de tipo [Album].
+class MapAlbum implements BaseAlbumMapper<Album> {
+  /// Mapea un mapa JSON a un objeto [//Album].
   @override
   mapJson(Map<String, dynamic> json) => Album(
         albumId: json['albumId'],
