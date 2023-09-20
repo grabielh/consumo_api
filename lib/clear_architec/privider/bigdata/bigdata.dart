@@ -27,8 +27,8 @@ class ListarAlbumProvider extends ChangeNotifier {
         };
       }).toList();
 
-      await preferencias.setStringList(
-          'miLista', listaSerializada.map((map) => json.encode(map)).toList());
+      await preferencias.setStringList('listaNueva',
+          listaSerializada.map((map) => json.encode(map)).toList());
       print('Lista guardada en SharedPreferences.');
     } catch (e) {
       print('Error al guardar la lista en SharedPreferences: $e');
@@ -38,8 +38,8 @@ class ListarAlbumProvider extends ChangeNotifier {
   void mostrarLista() async {
     try {
       final preferencias = await SharedPreferences.getInstance();
-      final listaSerializada = preferencias.getStringList('miLista');
-      
+      final listaSerializada = preferencias.getStringList('listaNueva');
+
       if (listaSerializada != null) {
         final listaDeserializada = listaSerializada.map((str) {
           final mapa = json.decode(str);
@@ -51,7 +51,7 @@ class ListarAlbumProvider extends ChangeNotifier {
             thumbnailUrl: mapa['thumbnailUrl'],
           );
         }).toList();
-  
+
         for (var album in listaDeserializada) {
           print('ID: ${album.id}, Título: ${album.title}');
         }
@@ -62,5 +62,31 @@ class ListarAlbumProvider extends ChangeNotifier {
       print('Error al leer la lista desde SharedPreferences: $e');
     }
   }
-  
+
+  Future<void> cargarListaDesdeSharedPreferences() async {
+    try {
+      final preferencias = await SharedPreferences.getInstance();
+      final listaSerializada = preferencias.getStringList('listaNueva');
+
+      if (listaSerializada != null) {
+        final listaDeserializada = listaSerializada.map((str) {
+          final mapa = json.decode(str);
+          return Album(
+            albumId: mapa['albumId'],
+            id: mapa['id'],
+            title: mapa['title'],
+            url: mapa['url'],
+            thumbnailUrl: mapa['thumbnailUrl'],
+          );
+        }).toList();
+
+        albumList.clear();
+        albumList.addAll(listaDeserializada);
+      } else {
+        print('No se encontraron datos guardados en SharedPreferences.');
+      }
+    } catch (e) {
+      print('Error al leer la lista desde SharedPreferences: $e');
+    }
+  }
 }

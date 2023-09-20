@@ -16,6 +16,13 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
   final TextEditingController _idAlbum = TextEditingController();
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
+    setlisAlbum.cargarListaDesdeSharedPreferences(); // Mueve esta llamada aquí
+  }
+
+  @override
   Widget build(BuildContext context) {
     final setlisAlbum = Provider.of<ListarAlbumProvider>(context);
     return Scaffold(
@@ -66,14 +73,18 @@ class _ServicesAlbumState extends State<ServicesAlbum> {
                             ),
                             IconButton(
                               onPressed: () async {
-                                Album nuevoAlbum = Album(
-                                  albumId: listAlbum.albumId,
-                                  id: listAlbum.id,
-                                  title: listAlbum.title,
-                                  url: listAlbum.url,
-                                  thumbnailUrl: listAlbum.thumbnailUrl,
-                                );
-                                setlisAlbum.agregarAlbum(nuevoAlbum);
+                                setState(() {
+                                  Album nuevoAlbum = Album(
+                                    albumId: listAlbum.albumId,
+                                    id: listAlbum.id,
+                                    title: listAlbum.title,
+                                    url: listAlbum.url,
+                                    thumbnailUrl: listAlbum.thumbnailUrl,
+                                  );
+                                  setlisAlbum.agregarAlbum(nuevoAlbum);
+                                  setlisAlbum
+                                      .guardarListanueva(setlisAlbum.albumList);
+                                });
                               },
                               icon: const Icon(Icons.save_alt),
                             ),
